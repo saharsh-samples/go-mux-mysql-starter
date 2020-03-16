@@ -1,0 +1,4 @@
+# go test and go build related files
+go-mux-mysql-starter
+coverage.out
+coverage.html
