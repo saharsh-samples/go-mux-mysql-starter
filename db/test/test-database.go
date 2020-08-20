@@ -11,7 +11,7 @@ import (
 // with mocked driver using github.com/DATA-DOG/go-sqlmock
 func NewDatabaseWithMockConnection(t *testing.T) (db.Database, sqlmock.Sqlmock, func()) {
 
-	handle, mock, openErr := sqlmock.New()
+	handle, mock, openErr := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	if openErr != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", openErr)
 	}
