@@ -49,7 +49,7 @@ func LookupOne(conn Connection, query string, args []interface{}, dest []interfa
 }
 
 // UpdateOne row in DB
-func UpdateOne(conn Connection, id string, updateCommand string, updateArgs []interface{}, query string, dest []interface{}) Error {
+func UpdateOne(conn Connection, id interface{}, updateCommand string, updateArgs []interface{}, query string, dest []interface{}) Error {
 
 	// update
 	_, updateError := conn.Exec(updateCommand, updateArgs...)
@@ -62,7 +62,7 @@ func UpdateOne(conn Connection, id string, updateCommand string, updateArgs []in
 }
 
 // DeleteOne row in DB
-func DeleteOne(conn Connection, id string, deleteCommand string, query string, dest []interface{}) Error {
+func DeleteOne(conn Connection, id interface{}, deleteCommand string, query string, dest []interface{}) Error {
 
 	// look up data being deleted
 	lookupError := LookupOne(conn, query, []interface{}{id}, dest)
