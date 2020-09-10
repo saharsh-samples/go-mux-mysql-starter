@@ -60,12 +60,22 @@ func TestRun_with_no_routes(t *testing.T) {
 
 }
 
-func TestRun_with_some_routes(t *testing.T) {
+func TestRun_with_some_routes_and_middlewares(t *testing.T) {
 
 	// arrange
+	requestCount := 0
+	middlewares := make(Middlewares, 1)
+	middlewares[0] = func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			requestCount++
+			h.ServeHTTP(w, r)
+		})
+	}
+
 	server := Bootstrap(&ContextIn{
-		Port:             0,
-		RoutesToRegister: []Routes{&route1{}, &route2{}},
+		Port:                  0,
+		RoutesToRegister:      []Routes{&route1{}, &route2{}},
+		MiddlewaresToRegister: middlewares,
 	}).Server
 
 	// act
@@ -100,6 +110,15 @@ func TestRun_with_some_routes(t *testing.T) {
 	resp, respErr = http.Post(url, "text/plain", nil)
 	test.AssertTrue("Expected no errors doing POST /route1", respErr == nil, t)
 	test.AssertEquals("", 405, resp.StatusCode, t)
+
+	// Post
+	url = fmt.Sprintf("http://localhost:%d/route2", port)
+	resp, respErr = http.Post(url, "text/plain", nil)
+	test.AssertTrue("Expected no errors doing POST /route1", respErr == nil, t)
+	test.AssertEquals("", 200, resp.StatusCode, t)
+
+	// Middleware
+	test.AssertEquals("", 2, requestCount, t)
 
 	// ---
 	// Test shutdown

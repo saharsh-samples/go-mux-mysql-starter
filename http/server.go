@@ -20,8 +20,9 @@ type Server interface {
 }
 
 type server struct {
-	port   int
-	routes []Routes
+	port        int
+	routes      []Routes
+	middlewares []mux.MiddlewareFunc
 
 	listener   net.Listener
 	httpServer *http.Server
@@ -38,6 +39,11 @@ func (server *server) Run() {
 	routesAgent := &routesAgent{router}
 	for _, r := range server.routes {
 		r.Register(routesAgent)
+	}
+
+	// register all middlewares
+	if len(server.middlewares) > 0 {
+		router.Use(server.middlewares...)
 	}
 
 	// Create a listener for port

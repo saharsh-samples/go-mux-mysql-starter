@@ -12,11 +12,17 @@ import (
 
 // StartTestServer with specified routes. Returns chosen network port
 func StartTestServer(routes []base.Routes, t test.T) (int, *app.ContextOut) {
+	return StartTestServerWithMiddleWare(nil, routes, t)
+}
+
+// StartTestServerWithMiddleWare with specified middlewares and routes. Returns chosen network port
+func StartTestServerWithMiddleWare(middlewares base.Middlewares, routes []base.Routes, t test.T) (int, *app.ContextOut) {
 
 	// bootstrap
 	server := base.Bootstrap(&base.ContextIn{
-		Port:             0,
-		RoutesToRegister: routes,
+		Port:                  0,
+		MiddlewaresToRegister: middlewares,
+		RoutesToRegister:      routes,
 	}).Server
 
 	appCtx := app.Bootstrap(&app.ContextIn{
