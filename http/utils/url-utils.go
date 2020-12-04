@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -13,6 +14,7 @@ type URLUtils interface {
 	GetPathParams(r *http.Request) map[string]string
 	GetQueryParameterAsString(r *http.Request, queryParamName string, defaultValue *string) (string, error)
 	GetQueryParameterAsInteger(r *http.Request, queryParamName string, defaultValue *int) (int, error)
+	GetQueryParameterAsBool(r *http.Request, queryParamName string, defaultValue *bool) (bool, error)
 	GetQueryParameterAsArrayOfString(r *http.Request, queryParamName string, minimumRequired int) ([]string, error)
 }
 
@@ -61,6 +63,25 @@ func (urlUtils *urlUtils) GetQueryParameterAsInteger(r *http.Request, queryParam
 	}
 
 	return value, nil
+
+}
+
+// GetQueryParameterAsBool extracts 'bool' value for specified query param
+func (urlUtils *urlUtils) GetQueryParameterAsBool(r *http.Request, queryParamName string, defaultValue *bool) (bool, error) {
+
+	values := r.URL.Query()[queryParamName]
+	numOfValues := len(values)
+
+	if numOfValues == 0 && defaultValue != nil {
+		return *defaultValue, nil
+	}
+
+	if numOfValues != 1 {
+		return false, fmt.Errorf("Expected ONE and only ONE value for '%v' Query Parameter", queryParamName)
+	}
+
+	strVal := values[0]
+	return strings.EqualFold(strVal, "true"), nil
 
 }
 
