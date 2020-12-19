@@ -50,7 +50,7 @@ type MockDatabase struct {
 	LookupOneError      db.Error
 
 	// UpdateOne
-	UpdateOneID         string
+	UpdateOneID         interface{}
 	UpdateOneCommand    string
 	UpdateOneArgs       []interface{}
 	UpdateOneQuery      string
@@ -58,7 +58,7 @@ type MockDatabase struct {
 	UpdateOneError      db.Error
 
 	// DeleteOne
-	DeleteOneID         string
+	DeleteOneID         interface{}
 	DeleteOneCommand    string
 	DeleteOneQuery      string
 	DeleteOneDestWriter func([]interface{})
@@ -104,7 +104,7 @@ func (database *MockDatabase) LookupOne(query string, args []interface{}, dest [
 }
 
 // UpdateOne row in DB
-func (database *MockDatabase) UpdateOne(id string, updateCommand string, updateArgs []interface{}, query string, dest []interface{}) db.Error {
+func (database *MockDatabase) UpdateOne(id interface{}, updateCommand string, updateArgs []interface{}, query string, dest []interface{}) db.Error {
 	database.UpdateOneID = id
 	database.UpdateOneCommand = updateCommand
 	database.UpdateOneArgs = updateArgs
@@ -116,7 +116,7 @@ func (database *MockDatabase) UpdateOne(id string, updateCommand string, updateA
 }
 
 // DeleteOne row in DB
-func (database *MockDatabase) DeleteOne(id string, deleteCommand string, query string, dest []interface{}) db.Error {
+func (database *MockDatabase) DeleteOne(id interface{}, deleteCommand string, query string, dest []interface{}) db.Error {
 	database.DeleteOneID = id
 	database.DeleteOneCommand = deleteCommand
 	database.DeleteOneQuery = query

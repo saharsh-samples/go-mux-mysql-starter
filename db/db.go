@@ -11,8 +11,8 @@ type Database interface {
 	WithTransaction(wrapped func(Connection) Error) (txExecError Error)
 	CreateOne(insertCommand string, insertArgs []interface{}, query string, dest []interface{}) Error
 	LookupOne(query string, args []interface{}, dest []interface{}) Error
-	UpdateOne(id string, updateCommand string, updateArgs []interface{}, query string, dest []interface{}) Error
-	DeleteOne(id string, deleteCommand string, query string, dest []interface{}) Error
+	UpdateOne(id interface{}, updateCommand string, updateArgs []interface{}, query string, dest []interface{}) Error
+	DeleteOne(id interface{}, deleteCommand string, query string, dest []interface{}) Error
 }
 
 type database struct {
@@ -83,11 +83,11 @@ func (database *database) LookupOne(query string, args []interface{}, dest []int
 }
 
 // UpdateOne row in DB
-func (database *database) UpdateOne(id string, updateCommand string, updateArgs []interface{}, query string, dest []interface{}) Error {
+func (database *database) UpdateOne(id interface{}, updateCommand string, updateArgs []interface{}, query string, dest []interface{}) Error {
 	return UpdateOne(database.dbHandle, id, updateCommand, updateArgs, query, dest)
 }
 
 // DeleteOne row in DB
-func (database *database) DeleteOne(id string, deleteCommand string, query string, dest []interface{}) Error {
+func (database *database) DeleteOne(id interface{}, deleteCommand string, query string, dest []interface{}) Error {
 	return DeleteOne(database.dbHandle, id, deleteCommand, query, dest)
 }
