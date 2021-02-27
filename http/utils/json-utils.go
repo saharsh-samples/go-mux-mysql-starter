@@ -99,6 +99,8 @@ func (jsonUtils *jsonUtils) HandleDatabaseError(w http.ResponseWriter, err db.Er
 		jsonUtils.BadRequest(w, err.Error())
 	} else if err.Type() == db.NotFound {
 		jsonUtils.NotFound(w, err.Error())
+	} else if err.Type() == db.Forbidden {
+		jsonUtils.Forbidden(w, err.Error())
 	} else {
 		jsonUtils.InternalError(w, err.Error())
 	}
