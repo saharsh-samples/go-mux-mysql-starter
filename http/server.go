@@ -23,6 +23,7 @@ type server struct {
 	port        int
 	routes      []Routes
 	middlewares []mux.MiddlewareFunc
+	tlsConfig   *TLSConfiguration
 
 	listener   net.Listener
 	httpServer *http.Server
@@ -66,7 +67,11 @@ func (server *server) Run() {
 
 	// listen for requests till app termination
 	server.httpServer = httpServer
-	server.httpServer.Serve(server.listener)
+	if server.tlsConfig != nil {
+		server.httpServer.ServeTLS(server.listener, server.tlsConfig.CertFile, server.tlsConfig.KeyFile)
+	} else {
+		server.httpServer.Serve(server.listener)
+	}
 }
 
 func (server *server) IsReady() bool {
