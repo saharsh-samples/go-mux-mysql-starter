@@ -55,6 +55,14 @@ func NewGenericError(detail string) Error {
 	return &databaseError{errorType: "Other", errorDetail: detail}
 }
 
+// Forbidden - errors where operation is forbidden
+var Forbidden = "Forbidden"
+
+// NewForbiddenError from detail
+func NewForbiddenError(detail string) Error {
+	return &databaseError{errorType: Forbidden, errorDetail: detail}
+}
+
 // WrapError (raw nullable errors) into db.Error
 func WrapError(wrapped error) Error {
 	if wrapped == nil {
