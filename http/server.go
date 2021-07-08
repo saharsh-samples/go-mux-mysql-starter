@@ -61,7 +61,24 @@ func (server *server) Run() {
 		Handler: handlers.CORS(
 			handlers.AllowedOrigins([]string{"*"}),
 			handlers.AllowedMethods([]string{"POST", "GET", "OPTIONS", "PUT", "DELETE"}),
-			handlers.AllowedHeaders([]string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "Access-Control-Request-Headers", "Access-Control-Request-Method", "Connection", "Host", "Origin", "User-Agent", "Referer", "Cache-Control", "X-header"}),
+			handlers.AllowedHeaders([]string{
+				"Accept",
+				"Accept-Encoding",
+				"Access-Control-Request-Headers",
+				"Access-Control-Request-Method",
+				"Authorization",
+				"Cache-Control",
+				"Client-Version",
+				"Connection",
+				"Content-Length",
+				"Content-Type",
+				"Host",
+				"Origin",
+				"Referer",
+				"User-Agent",
+				"X-CSRF-Token",
+				"X-header",
+			}),
 		)(router),
 	}
 
@@ -72,6 +89,7 @@ func (server *server) Run() {
 	} else {
 		server.httpServer.Serve(server.listener)
 	}
+
 }
 
 func (server *server) IsReady() bool {
@@ -98,4 +116,5 @@ func (server *server) Shutdown() error {
 	err := server.httpServer.Shutdown(ctx)
 	server.httpServer = nil
 	return err
+
 }
